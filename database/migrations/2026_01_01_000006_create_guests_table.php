@@ -1,0 +1,3 @@
+<?php
+use Illuminate\Database\Migrations\Migration; use Illuminate\Database\Schema\Blueprint; use Illuminate\Support\Facades\Schema;
+return new class extends Migration { public function up():void{Schema::create('guests',function(Blueprint $t){$t->id();$t->string('identity_number')->unique();$t->string('name');$t->enum('gender',['L','P']);$t->string('phone',25);$t->string('email')->nullable();$t->text('address')->nullable();$t->timestamps();});} public function down():void{Schema::dropIfExists('guests');}};
