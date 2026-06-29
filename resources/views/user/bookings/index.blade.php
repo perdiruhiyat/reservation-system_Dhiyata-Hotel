@@ -1,7 +1,7 @@
 @extends('layouts.user')
 @section('title', 'Reservasi Saya')
 @section('content')
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4" data-aos="fade-down">
         <div>
             <div class="section-kicker">Akun Saya</div>
             <h1 class="h2 fw-bold mb-2">Reservasi Saya</h1>
@@ -12,7 +12,7 @@
     </div>
     <div class="row g-4">
         @forelse($items as $booking)
-            <div class="col-12 col-xl-6">
+            <div class="col-12 col-xl-6 col-xxl-4" data-aos="fade-up" data-aos-delay="{{ $loop->index * 80 }}">
                 <article class="booking-card h-100">
                     <div class="booking-top">
                         <div>
@@ -59,7 +59,7 @@
                 </article>
             </div>
         @empty
-            <div class="col-12">
+            <div class="col-12 text-center" data-aos="fade-up" data-aos-delay="100">
                 <div class="empty-box"><i class="bi bi-calendar2-x fs-1"></i>
                     <h2 class="h4 fw-bold mt-3">Belum ada reservasi</h2><a href="{{ route('user.bookings.create') }}"
                         class="btn btn-primary mt-2">Buat Reservasi</a>
@@ -68,7 +68,7 @@
         @endforelse
     </div>
     @if($items->hasPages())
-    <div class="mt-4">{{ $items->links() }}</div>@endif
+    <div class="mt-4" data-aos="fade-up" data-aos-delay="100">{{ $items->links() }}</div>@endif
 @endsection
 @push('styles')
     <style>

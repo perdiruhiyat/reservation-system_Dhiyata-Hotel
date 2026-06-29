@@ -126,7 +126,8 @@ class BookingController extends Controller
             }
             DB::transaction(function () use ($booking) {
                 $booking->update(['status' => 'checked_in',]);
-                Room::whereIn('id', $booking->rooms->pluck('id'))->update(['status' => 'occupied',]); });
+                Room::whereIn('id', $booking->rooms->pluck('id'))->update(['status' => 'occupied',]);
+            });
             return response()->json(['success' => true, 'message' => 'Check-in berhasil diproses.', 'booking' => ['id' => $booking->id, 'booking_code' => $booking->booking_code, 'guest_name' => $booking->guest->name ?? '-', 'rooms' => $booking->rooms->pluck('room_number')->implode(', '), 'status' => 'checked_in', 'detail_url' => route('bookings.show', $booking),],]);
         } catch (\Throwable $e) {
             Log::error('QR check-in gagal', ['message' => $e->getMessage(), 'qr_data' => $data['qr_data'] ?? null,]);

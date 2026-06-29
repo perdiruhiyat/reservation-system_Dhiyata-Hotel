@@ -13,18 +13,28 @@ class AuthController extends Controller
     {
         return view('auth.login');
     }
+
     public function showRegister()
     {
         return view('auth.register');
     }
+
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+            'email' => [
+                'required',
+                'email',
+            ],
+            'password' => [
+                'required',
+            ],
         ]);
 
-        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (!Auth::attempt(
+            $credentials,
+            $request->boolean('remember')
+        )) {
             return back()
                 ->withErrors([
                     'email' => 'Email atau password tidak sesuai.',
@@ -40,11 +50,18 @@ class AuthController extends Controller
             return redirect()->route('user.home');
         }
 
-        if (in_array($user->role, ['admin', 'petugas'], true)) {
+        if (in_array(
+            $user->role,
+            ['admin', 'petugas'],
+            true
+        )) {
             return redirect()->route('dashboard');
         }
 
         Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect()
             ->route('login')
@@ -52,18 +69,57 @@ class AuthController extends Controller
                 'email' => 'Role akun tidak dikenali.',
             ]);
     }
-    public function register(Request $r)
+
+    public function register(Request $request)
     {
-        $d = $r->validate(['name' => ['required', 'string', 'max:100'], 'email' => ['required', 'email', 'unique:users,email'], 'password' => ['required', 'confirmed', 'min:8']]);
-        $u = User::create(['name' => $d['name'], 'email' => $d['email'], 'password' => Hash::make($d['password']), 'role' => 'user']);
-        Auth::login($u);
-        return redirect()->route('user.home');
+        $data = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:100',
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                'unique:users,email',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'confirmed',
+                'min:8',
+            ],
+        ]);
+
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'role' => 'user',
+        ]);
+
+        Auth::login($user);
+
+        $request->session()->regenerate();
+
+        return redirect()
+            ->route('user.home')
+            ->with(
+                'success',
+                'Akun berhasil dibuat. Lengkapi profil untuk mulai melakukan reservasi.'
+            );
     }
-    public function logout(Request $r)
+
+    public function logout(Request $request)
     {
         Auth::logout();
-        $r->session()->invalidate();
-        $r->session()->regenerateToken();
-        return redirect()->route('login');
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()
+            ->route('login')
+            ->with('success', 'Anda berhasil keluar.');
     }
 }

@@ -4,7 +4,7 @@
 @section('content')
 <section class="mb-4">
     <div class="card overflow-hidden border-0"
-        style="background:linear-gradient(135deg,#4f46e5,#7c3aed 55%,#db2777); color:#fff;">
+        style="background:linear-gradient(135deg,#0f766e,#0d9488 55%,#d4a017); color:#fff;">
         <div class="card-body p-4 p-lg-5 position-relative">
             <div class="row align-items-center g-4">
                 <div class="col-12 col-lg-8">
@@ -141,7 +141,7 @@
                     data: chartValues,
                     borderWidth: 0,
                     borderRadius: 10,
-                    backgroundColor: 'rgba(99, 102, 241, 0.82)'
+                    backgroundColor: 'rgba(13, 148, 136, 1)'
                 }]
             },
             options: {
